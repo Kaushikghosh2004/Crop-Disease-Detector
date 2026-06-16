@@ -1,0 +1,6 @@
+flask
+pyyaml
+ultralytics
+opencv-python
+numpy
+bcrypt

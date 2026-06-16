@@ -1,0 +1,28 @@
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+CropDoctor/venv/
+
+# Python cache files
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# Datasets (Too large for GitHub)
+Dataset/
+PlantDataset_YOLO11/
+
+# IDE files
+.vscode/
+.idea/
+
+# Local databases
+*.db
+CropDoctor/database.db
+
+# User Uploads
+CropDoctor/static/uploads/*
+!CropDoctor/static/uploads/.gitkeep

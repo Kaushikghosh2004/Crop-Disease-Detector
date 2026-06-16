@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CropDoctor AI - Agricultural Disease Detection</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js for Admin Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-brand" onclick="navigateTo('landing')">
+        <i class="fa-solid fa-leaf brand-icon"></i>
+        <span>CropDoctor <span class="accent-text">AI</span></span>
+      </a>
+      <div class="nav-toggle" id="nav-toggle">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <ul class="nav-menu" id="nav-menu">
+        <li class="nav-item auth-only"><a href="#" class="nav-link active" onclick="navigateTo('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+        <li class="nav-item auth-only"><a href="#" class="nav-link" onclick="navigateTo('analysis')"><i class="fa-solid fa-qrcode"></i> Analyze Crop</a></li>
+        <li class="nav-item auth-only"><a href="#" class="nav-link" onclick="navigateTo('history')"><i class="fa-solid fa-history"></i> Scan History</a></li>
+        <li class="nav-item admin-only" style="display: none;"><a href="#" class="nav-link" onclick="navigateTo('admin')"><i class="fa-solid fa-user-shield"></i> Admin</a></li>
+        <li class="nav-item auth-only"><a href="#" class="nav-link" onclick="navigateTo('settings')"><i class="fa-solid fa-cog"></i> Settings</a></li>
+        <li class="nav-item auth-only"><a href="#" class="nav-link" onclick="navigateTo('assistant')"><i class="fa-solid fa-robot"></i> AI Assistant</a></li>
+        <li class="nav-item guest-only"><a href="#" class="btn btn-primary nav-btn" onclick="navigateTo('auth')">Sign In</a></li>
+        <li class="nav-item auth-only"><a href="#" class="btn btn-outline nav-btn" onclick="logout()"><i class="fa-solid fa-sign-out-alt"></i> Logout</a></li>
+        <li class="nav-item theme-switch-item">
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="main-content">
+
+    <!-- 1. LANDING PAGE VIEW -->
+    <section id="view-landing" class="view-section active">
+      <div class="hero-container">
+        <!-- Floating Leaves Background Elements -->
+        <div class="leaf leaf-1"><i class="fa-solid fa-leaf"></i></div>
+        <div class="leaf leaf-2"><i class="fa-solid fa-leaf"></i></div>
+        <div class="leaf leaf-3"><i class="fa-solid fa-leaf"></i></div>
+        
+        <div class="hero-content">
+          <div class="badge-new">NEW: YOLO11 powered AI Analysis</div>
+          <h1>CropDoctor <span class="gradient-text">AI</span></h1>
+          <p class="hero-subtitle">Detect crop diseases instantly using state-of-the-art artificial intelligence. Upload a leaf image, get an instant diagnosis, severity scan, and expert treatment recommendation.</p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary btn-lg" onclick="handleStartAnalyzing()">
+              <i class="fa-solid fa-rocket"></i> Analyze Crop
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="scrollToFeatures()">
+              Learn More
+            </button>
+          </div>
+        </div>
+        
+        <div class="hero-visual">
+          <div class="visual-box-wrapper">
+            <div class="visual-box">
+              <div class="laser-scanner"></div>
+              <img src="/static/diseased_leaf.png" alt="Plant leaf">
+              <div class="label-box">Wheat Rust Detected (95.8%)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <section id="features" class="features-section">
+        <h2 class="section-title">Why CropDoctor AI?</h2>
+        <p class="section-subtitle">Empowering farmers and agriculture professionals with instant crop diagnostics.</p>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+            <h3>Instant Detection</h3>
+            <p>Get diagnostic results in real-time. Our system analyzes your uploads in under 2 seconds.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <h3>YOLO11 AI Power</h3>
+            <p>Utilizes custom trained YOLO11 models to identify precise locations and types of disease spots.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-file-medical"></i></div>
+            <h3>Treatment Advice</h3>
+            <p>Receive organic, chemical, and cultural care instructions for over 45 classes of crop diseases.</p>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- 2. AUTHENTICATION VIEW (LOGIN / REGISTER) -->
+    <section id="view-auth" class="view-section">
+      <div class="auth-card-container">
+        <div class="auth-card">
+          <div class="auth-header">
+            <div class="auth-tabs">
+              <button id="tab-login" class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+              <button id="tab-register" class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+            </div>
+          </div>
+          
+          <!-- Login Form -->
+          <form id="form-login" class="auth-form" onsubmit="handleLogin(event)">
+            <h2>Welcome Back</h2>
+            <p class="auth-desc">Login to start analyzing your crops and saving scan logs.</p>
+            
+            <div class="form-group">
+              <label for="login-email">Email Address</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input type="email" id="login-email" required placeholder="name@domain.com">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="login-password" required placeholder="••••••••">
+                <i class="fa-solid fa-eye-slash password-toggle" onclick="togglePasswordVisibility('login-password', this)"></i>
+              </div>
+            </div>
+
+            <div class="form-options">
+              <label class="checkbox-container">
+                <input type="checkbox" id="login-remember">
+                <span class="checkmark"></span> Remember Me
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            <div class="auth-footer">
+              Don't have an account? <a href="#" onclick="switchAuthTab('register')">Register now</a>
+            </div>
+          </form>
+
+          <!-- Register Form -->
+          <form id="form-register" class="auth-form hidden" onsubmit="handleRegister(event)">
+            <h2>Create an Account</h2>
+            <p class="auth-desc">Get access to professional crop diagnostics and PDF report downloads.</p>
+            
+            <div class="form-group">
+              <label for="register-email">Email Address</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input type="email" id="register-email" required placeholder="name@domain.com">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="register-password" required placeholder="At least 6 characters">
+                <i class="fa-solid fa-eye-slash password-toggle" onclick="togglePasswordVisibility('register-password', this)"></i>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="register-password-confirm">Confirm Password</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="register-password-confirm" required placeholder="Repeat your password">
+                <i class="fa-solid fa-eye-slash password-toggle" onclick="togglePasswordVisibility('register-password-confirm', this)"></i>
+              </div>
+            </div>
+
+            <!-- Profile Info (Sprint 1) -->
+            <div class="form-row-grid">
+              <div class="form-group">
+                <label for="register-name">Full Name</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input type="text" id="register-name" required placeholder="John Doe">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="register-location">Location / Region</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-location-dot input-icon"></i>
+                  <input type="text" id="register-location" placeholder="e.g., Kansas, USA">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row-grid">
+              <div class="form-group">
+                <label for="register-farmsize">Farm Size (Acres)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-vector-square input-icon"></i>
+                  <input type="number" step="0.1" id="register-farmsize" placeholder="e.g., 40.5">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="register-primarycrop">Primary Crop</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-wheat-awn input-icon"></i>
+                  <select id="register-primarycrop">
+                    <option value="Wheat">Wheat</option>
+                    <option value="Tomato">Tomato</option>
+                    <option value="Potato">Potato</option>
+                    <option value="Corn">Corn</option>
+                    <option value="Rice">Rice</option>
+                    <option value="Banana">Banana</option>
+                    <option value="Grape">Grape</option>
+                    <option value="Apple">Apple</option>
+                    <option value="Bean">Bean</option>
+                    <option value="Cotton">Cotton</option>
+                    <option value="Pepper">Pepper</option>
+                    <option value="Soybean">Soybean</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Register Account</button>
+            <div class="auth-footer">
+              Already have an account? <a href="#" onclick="switchAuthTab('login')">Sign in</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. DASHBOARD VIEW -->
+    <section id="view-dashboard" class="view-section">
+      <div class="dashboard-header">
+        <div>
+          <h1 class="welcome-title">Hello, <span id="user-email-display">Farmer</span>!</h1>
+          <p class="subtitle">Here is an overview of your crop diagnostics activity.</p>
+        </div>
+        <button class="btn btn-primary" onclick="navigateTo('analysis')">
+          <i class="fa-solid fa-plus"></i> New Scan
+        </button>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-blue"><i class="fa-solid fa-qrcode"></i></div>
+          <div class="stat-info">
+            <h3 id="stat-total-scans">0</h3>
+            <p>Total Scans</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-red"><i class="fa-solid fa-virus-slash"></i></div>
+          <div class="stat-info">
+            <h3 id="stat-diseased-scans">0</h3>
+            <p>Diseases Detected</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-green"><i class="fa-solid fa-percent"></i></div>
+          <div class="stat-info">
+            <h3 id="stat-accuracy">0%</h3>
+            <p>Average Confidence</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-yellow"><i class="fa-solid fa-calendar-alt"></i></div>
+          <div class="stat-info">
+            <h3 id="stat-last-scan" style="font-size: 1.1rem; line-height: 1.5;">Never</h3>
+            <p>Last Scan Date</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action and Recent Scans -->
+      <div class="dashboard-content-layout">
+        <div class="recent-scans-panel card">
+          <div class="panel-header">
+            <h2>Recent Diagnostics Logs</h2>
+            <a href="#" class="link-btn" onclick="navigateTo('history')">View All</a>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Preview</th>
+                  <th>Crop</th>
+                  <th>Diagnosis</th>
+                  <th>Confidence</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-recent-table-body">
+                <tr>
+                  <td colspan="6" class="text-center py-4 text-muted">No recent scans. Ready to analyze!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="quick-analysis-panel card text-center">
+          <div class="panel-icon"><i class="fa-solid fa-upload"></i></div>
+          <h3>Start New Analysis</h3>
+          <p>Quickly drag and drop or upload a photo of a crop leaf to identify health issues.</p>
+          <button class="btn btn-primary" onclick="navigateTo('analysis')">Upload Leaf Image</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. CROP ANALYSIS VIEW -->
+    <section id="view-analysis" class="view-section">
+      <div class="section-header">
+        <h1>Crop Diagnostics</h1>
+        <p class="subtitle">Upload high-resolution images of diseased or healthy leaves for analysis.</p>
+      </div>
+
+      <div class="analysis-container">
+        <!-- Upload Form Card -->
+        <div class="upload-card card" id="upload-panel">
+          <form id="form-analysis" onsubmit="handleAnalysis(event)">
+            <div id="drop-zone" class="drop-zone">
+              <i class="fa-solid fa-cloud-arrow-up drop-zone-icon"></i>
+              <span class="drop-zone-text">Drag & drop your leaf image here or <span class="browse-link">Browse files</span></span>
+              <span class="drop-zone-help">Supports JPG, JPEG, PNG (max 10MB)</span>
+              <input type="file" id="file-input" accept="image/*" class="file-input" required>
+            </div>
+            
+            <div id="preview-container" class="preview-container hidden">
+              <img id="image-preview" src="#" alt="Selected Leaf Preview">
+              <button type="button" id="remove-image-btn" class="btn-remove-image" onclick="clearUploadPreview()"><i class="fa-solid fa-times"></i> Remove</button>
+            </div>
+
+            <!-- Parameters -->
+            <div class="parameter-section">
+              <div class="param-header">
+                <label for="confidence-range">Confidence Threshold</label>
+                <span id="confidence-value" class="param-value">25%</span>
+              </div>
+              <input type="range" id="confidence-range" min="10" max="100" value="25" class="slider" oninput="updateConfidenceLabel(this.value)">
+              <div class="slider-labels">
+                <span>More Sensitive</span>
+                <span>More Accurate</span>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-submit-analysis" class="btn btn-primary btn-block btn-lg" disabled>
+              <i class="fa-solid fa-magnifying-glass"></i> Analyze Now
+            </button>
+          </form>
+        </div>
+
+        <!-- Scanning / Processing Overlay -->
+        <div class="scanner-overlay card hidden" id="scanner-panel">
+          <div class="scanner-container">
+            <div class="scanner-circle-outer"></div>
+            <div class="scanner-circle-inner"></div>
+            <div class="scanner-laser"></div>
+            <img id="scanner-preview-img" src="#" alt="Scanning target">
+          </div>
+          <h2 class="scanner-status" id="scanner-status-text">Uploading Image...</h2>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="scanner-progress-fill" style="width: 0%;"></div>
+          </div>
+          <div class="scanner-percent" id="scanner-percent-text">0%</div>
+        </div>
+
+        <!-- Results Display Section -->
+        <div class="results-container hidden" id="results-panel">
+          <div class="results-header card">
+            <div class="results-header-info">
+              <span class="label-heading">Diagnosis Report</span>
+              <h2 id="result-title">Tomato Late Blight</h2>
+              <div class="confidence-wrapper">
+                <span class="conf-lbl">Confidence Rate:</span>
+                <span class="conf-val" id="result-conf-val">95.8%</span>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill bg-success" id="result-conf-bar" style="width: 95%;"></div>
+              </div>
+              
+              <!-- Diagnosis Feedback System -->
+              <div class="feedback-widget" id="feedback-widget">
+                <span class="feedback-title">Was this diagnosis correct?</span>
+                <div class="feedback-buttons">
+                  <button class="btn btn-feedback btn-feedback-yes" id="btn-feedback-yes" onclick="submitScanFeedback(true)">
+                    <i class="fa-solid fa-thumbs-up"></i> Correct
+                  </button>
+                  <button class="btn btn-feedback btn-feedback-no" id="btn-feedback-no" onclick="submitScanFeedback(false)">
+                    <i class="fa-solid fa-thumbs-down"></i> Incorrect
+                  </button>
+                </div>
+                <div class="feedback-status hidden" id="feedback-status-text">
+                  <i class="fa-solid fa-circle-check"></i> Thank you for your feedback!
+                </div>
+              </div>
+            </div>
+            
+            <div class="results-header-actions">
+              <button class="btn btn-outline" id="btn-view-report" onclick="viewDetailedReport()"><i class="fa-solid fa-file-pdf"></i> View & Print Report</button>
+              <button class="btn btn-secondary" onclick="resetAnalysisPage()"><i class="fa-solid fa-rotate-left"></i> Scan Another</button>
+            </div>
+          </div>
+
+          <div class="results-grid">
+            <!-- Images comparison card -->
+            <div class="results-images card">
+              <h3>Image Analysis</h3>
+              <div class="images-toggle">
+                <button id="btn-img-annotated" class="toggle-btn active" onclick="switchResultImage('annotated')">AI Detections</button>
+                <button id="btn-img-original" class="toggle-btn" onclick="switchResultImage('original')">Original Image</button>
+              </div>
+              <div class="image-viewer-box">
+                <img id="result-image-display" src="" alt="Diagnosis Image">
+              </div>
+            </div>
+
+            <!-- Health Score Card -->
+            <div class="results-health card text-center">
+              <h3>Plant Health Score</h3>
+              <div class="health-score-container-wrapper">
+                <div class="health-score-container">
+                  <svg class="progress-ring" width="140" height="140">
+                    <circle class="progress-ring__background" stroke="var(--border-color)" stroke-width="10" fill="transparent" r="55" cx="70" cy="70"/>
+                    <circle class="progress-ring__circle" id="health-ring" stroke="var(--success-color)" stroke-width="10" fill="transparent" r="55" cx="70" cy="70" stroke-dasharray="345.57" stroke-dashoffset="345.57"/>
+                  </svg>
+                  <div class="health-score-value" id="health-score-text">100</div>
+                </div>
+              </div>
+              <p class="health-score-desc" id="health-score-desc">The plant is in excellent health condition.</p>
+            </div>
+
+            <!-- Severity & Recovery Actions Card -->
+            <div class="results-severity card">
+              <h3>Severity & Recovery Analysis</h3>
+              <div class="severity-box">
+                <div class="severity-badge-wrapper">
+                  <span id="severity-badge" class="badge-status critical">Critical</span>
+                </div>
+                <div class="gauge-wrapper">
+                  <div class="gauge-value" id="severity-percent">32%</div>
+                  <div class="gauge-desc">Of the leaf surface shows signs of infection.</div>
+                </div>
+              </div>
+              <div class="progress-bar-container large">
+                <div class="progress-bar-fill" id="severity-fill-bar" style="width: 32%;"></div>
+              </div>
+              
+              <div class="severity-meta-info">
+                <p><strong>Detected Regions:</strong> <span id="result-regions-count">0</span> spots</p>
+                <p><strong>Model Version:</strong> <span id="result-model-version">YOLO11_v1</span></p>
+              </div>
+              
+              <div class="recovery-actions">
+                <button class="btn btn-primary btn-block btn-lg" id="btn-track-recovery" onclick="startRecoveryFollowUp()">
+                  <i class="fa-solid fa-arrow-up-right-dots"></i> Track Recovery (Upload Follow-up)
+                </button>
+                <button class="btn btn-outline btn-block btn-lg hidden" id="btn-view-timeline" onclick="viewRecoveryTimeline()">
+                  <i class="fa-solid fa-timeline"></i> View Recovery Timeline
+                </button>
+              </div>
+            </div>
+
+            <!-- Disease Confidence Breakdown Card -->
+            <div class="results-breakdown card">
+              <h3>Disease Confidence Breakdown</h3>
+              <div class="breakdown-list" id="confidence-breakdown-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <div class="info-blocks-grid">
+            <!-- Disease Info Card -->
+            <div class="info-card card">
+              <div class="info-header"><i class="fa-solid fa-info-circle info-icon"></i> <h3>Disease Details</h3></div>
+              <div class="info-body">
+                <p><strong>Description:</strong> <span id="result-desc">Fungal disease description...</span></p>
+                <p><strong>Symptoms:</strong> <span id="result-symptoms">Leaf spot, mold, yellowing...</span></p>
+                <p><strong>Causes:</strong> <span id="result-causes">Environmental dampness, pathogen...</span></p>
+              </div>
+            </div>
+
+            <!-- Treatments Card -->
+            <div class="info-card card">
+              <div class="info-header"><i class="fa-solid fa-kit-medical treat-icon"></i> <h3>Recommended Treatments</h3></div>
+              <div class="info-body" id="result-treatments">
+                <!-- Dynamically filled -->
+              </div>
+            </div>
+
+            <!-- Preventions Card -->
+            <div class="info-card card">
+              <div class="info-header"><i class="fa-solid fa-shield-halved prevent-icon"></i> <h3>Prevention Guidelines</h3></div>
+              <div class="info-body" id="result-preventions">
+                <!-- Dynamically filled -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SCAN HISTORY VIEW -->
+    <section id="view-history" class="view-section">
+      <div class="section-header">
+        <h1>Scan History</h1>
+        <p class="subtitle">Access and manage all your historical crop health scans.</p>
+      </div>
+
+      <div class="history-controls card">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="history-search" placeholder="Search by crop, disease..." oninput="triggerHistorySearch()">
+        </div>
+        <div class="filter-box">
+          <label for="history-crop-filter">Crop:</label>
+          <select id="history-crop-filter" onchange="triggerHistoryFilter()">
+            <option value="">All Crops</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="history-table-wrapper card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Preview</th>
+                <th>Crop</th>
+                <th>Diagnosis</th>
+                <th>Confidence</th>
+                <th>Date / Time</th>
+                <th>Severity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination-container">
+          <span class="pagination-info" id="pagination-info">Showing 0 to 0 of 0 entries</span>
+          <div class="pagination-buttons">
+            <button class="btn btn-outline btn-sm" id="btn-prev-page" onclick="prevHistoryPage()"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+            <span class="current-page-num" id="current-page-num">1</span>
+            <button class="btn btn-outline btn-sm" id="btn-next-page" onclick="nextHistoryPage()">Next <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. REPORT VIEW (PRINTABLE) -->
+    <section id="view-report" class="view-section">
+      <div class="report-actions-bar no-print">
+        <button class="btn btn-secondary" onclick="navigateTo('history')"><i class="fa-solid fa-arrow-left"></i> Back to History</button>
+        <div>
+          <button class="btn btn-outline" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Report</button>
+          <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+        </div>
+      </div>
+
+      <div class="printable-report" id="report-print-area">
+        <div class="report-header">
+          <div class="report-brand">
+            <i class="fa-solid fa-leaf brand-logo-icon"></i>
+            <h2>CropDoctor AI</h2>
+            <span>Agricultural Diagnosis Report</span>
+          </div>
+          <div class="report-metadata">
+            <p><strong>Report ID:</strong> <span id="rep-id">#12345</span></p>
+            <p><strong>Date Generated:</strong> <span id="rep-date">2026-06-14</span></p>
+            <p><strong>Inspected By:</strong> <span id="rep-user">user@domain.com</span></p>
+          </div>
+        </div>
+
+        <div class="report-divider"></div>
+
+        <div class="report-summary-grid">
+          <div class="summary-details">
+            <h3>Diagnostic Summary</h3>
+            <table class="summary-table">
+              <tr>
+                <td><strong>Target Crop:</strong></td>
+                <td id="rep-crop">Wheat</td>
+              </tr>
+              <tr>
+                <td><strong>Detected Condition:</strong></td>
+                <td><span class="diagnosis-highlight" id="rep-disease">Yellow Rust</span></td>
+              </tr>
+              <tr>
+                <td><strong>Model Confidence:</strong></td>
+                <td id="rep-confidence">95.8%</td>
+              </tr>
+              <tr>
+                <td><strong>Severity Level:</strong></td>
+                <td><span class="severity-highlight" id="rep-severity-level">Critical</span></td>
+              </tr>
+              <tr>
+                <td><strong>Infected Area:</strong></td>
+                <td id="rep-severity-percentage">32.0%</td>
+              </tr>
+              <tr>
+                <td><strong>Detected Spots:</strong></td>
+                <td id="rep-regions-count">0 spots</td>
+              </tr>
+              <tr>
+                <td><strong>Plant Health Score:</strong></td>
+                <td><strong id="rep-health-score" style="font-size: 1.1rem; color: #16a34a;">100/100</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Recovery Progression:</strong></td>
+                <td id="rep-recovery-rate">N/A (Baseline)</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="summary-images">
+            <div class="report-image-box">
+              <p>Analyzed Leaf Image</p>
+              <img id="rep-image" src="" alt="Crop Leaf Scan">
+            </div>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <h3>Condition Details</h3>
+          <p><strong>Description:</strong> <span id="rep-desc">Details here...</span></p>
+          <p><strong>Symptoms:</strong> <span id="rep-symptoms">Symptoms here...</span></p>
+          <p><strong>Primary Cause:</strong> <span id="rep-causes">Causes here...</span></p>
+        </div>
+
+        <div class="report-section">
+          <h3>Actionable Recommendations & Treatments</h3>
+          <div id="rep-treatments" class="report-list-container">
+            <!-- Filled dynamically -->
+          </div>
+        </div>
+
+        <div class="report-section">
+          <h3>Prevention & Long-term Care</h3>
+          <div id="rep-preventions" class="report-list-container">
+            <!-- Filled dynamically -->
+          </div>
+        </div>
+
+        <div class="report-footer">
+          <p>Generated by CropDoctor AI — Advanced Deep Learning Agricultural Assistant</p>
+          <p class="disclaimer">Disclaimer: This report is generated by a computer vision model. Verify with a professional agronomist before applying major chemical treatments.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. SETTINGS VIEW -->
+    <section id="view-settings" class="view-section">
+      <div class="section-header">
+        <h1>Account Settings</h1>
+        <p class="subtitle">Manage your profile, change security details, or delete your account.</p>
+      </div>
+
+      <div class="settings-grid">
+        <!-- Farmer Profile Card -->
+        <div class="settings-card card">
+          <h3>Farmer Profile</h3>
+          <form id="form-profile-settings" onsubmit="handleSaveProfile(event)">
+            <div class="form-group">
+              <label for="settings-name">Full Name</label>
+              <input type="text" id="settings-name" required placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="settings-location">Location / Region</label>
+              <input type="text" id="settings-location" placeholder="e.g. Kansas, USA">
+            </div>
+            <div class="form-row-grid">
+              <div class="form-group">
+                <label for="settings-farmsize">Farm Size (Acres)</label>
+                <input type="number" step="0.1" id="settings-farmsize" placeholder="e.g. 40.5">
+              </div>
+              <div class="form-group">
+                <label for="settings-primarycrop">Primary Crop</label>
+                <select id="settings-primarycrop">
+                  <option value="Wheat">Wheat</option>
+                  <option value="Tomato">Tomato</option>
+                  <option value="Potato">Potato</option>
+                  <option value="Corn">Corn</option>
+                  <option value="Rice">Rice</option>
+                  <option value="Banana">Banana</option>
+                  <option value="Grape">Grape</option>
+                  <option value="Apple">Apple</option>
+                  <option value="Bean">Bean</option>
+                  <option value="Cotton">Cotton</option>
+                  <option value="Pepper">Pepper</option>
+                  <option value="Soybean">Soybean</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Profile Info</button>
+          </form>
+        </div>
+
+        <!-- Change Password Card -->
+        <div class="settings-card card">
+          <h3>Update Password</h3>
+          <form id="form-change-password" onsubmit="handleChangePassword(event)">
+            <div class="form-group">
+              <label for="settings-curr-password">Current Password</label>
+              <input type="password" id="settings-curr-password" required placeholder="Enter current password">
+            </div>
+            <div class="form-group">
+              <label for="settings-new-password">New Password</label>
+              <input type="password" id="settings-new-password" required placeholder="Enter new password (min 6 chars)">
+            </div>
+            <div class="form-group">
+              <label for="settings-confirm-password">Confirm New Password</label>
+              <input type="password" id="settings-confirm-password" required placeholder="Confirm new password">
+            </div>
+            <button type="submit" class="btn btn-primary">Change Password</button>
+          </form>
+        </div>
+
+        <!-- Account Management Card -->
+        <div class="settings-card card danger-card">
+          <h3>Danger Zone</h3>
+          <p class="danger-desc">Deleting your account will permanently remove all your scan history, custom reports, and profile records. This action cannot be undone.</p>
+          <button class="btn btn-danger" onclick="openDeleteAccountModal()">Delete My Account</button>
+        </div>
+      </div>
+
+      <!-- Delete Account Confirmation Modal -->
+      <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+          <h2>Are you absolutely sure?</h2>
+          <p>Please enter your password to confirm account deletion.</p>
+          <form id="form-delete-account" onsubmit="handleDeleteAccount(event)">
+            <div class="form-group">
+              <input type="password" id="delete-confirm-password" required placeholder="Enter your password">
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-secondary" onclick="closeDeleteAccountModal()">Cancel</button>
+              <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7b. RECOVERY TIMELINE VIEW -->
+    <section id="view-recovery" class="view-section">
+      <div class="section-header">
+        <h1>Plant Recovery Tracker</h1>
+        <p class="subtitle">Monitor plant healing progress and severity trends over time.</p>
+      </div>
+
+      <div class="recovery-tracker-layout">
+        <!-- Recovery Stats Card -->
+        <div class="recovery-summary-panel card">
+          <div class="recovery-stats-header">
+            <div>
+              <span class="badge-status success" id="recovery-status-badge">Recovering</span>
+              <h2 id="recovery-title">Tomato Recovery Tracker</h2>
+            </div>
+            <button class="btn btn-primary" onclick="startRecoveryFollowUpFromTracker()"><i class="fa-solid fa-plus"></i> Add Follow-up Scan</button>
+          </div>
+          
+          <div class="recovery-metrics-grid">
+            <div class="recovery-metric-card">
+              <span class="metric-label">Overall Recovery</span>
+              <span class="metric-value text-success" id="recovery-rate-value">0%</span>
+            </div>
+            <div class="recovery-metric-card">
+              <span class="metric-label">Initial Severity</span>
+              <span class="metric-value text-red" id="recovery-initial-sev">0%</span>
+            </div>
+            <div class="recovery-metric-card">
+              <span class="metric-label">Current Severity</span>
+              <span class="metric-value text-blue" id="recovery-current-sev">0%</span>
+            </div>
+          </div>
+
+          <div class="recovery-chart-section">
+            <h3>Severity Trend Progression</h3>
+            <div class="recovery-chart-container">
+              <div class="recovery-progress-bar-progression" id="recovery-progress-bars">
+                <!-- Progress bars will be added dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vertical Timeline Card -->
+        <div class="recovery-timeline-panel card">
+          <h3>Chronological Recovery Logs</h3>
+          <div class="vertical-timeline" id="recovery-vertical-timeline">
+            <!-- Timeline elements dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7c. AI ASSISTANT VIEW -->
+    <section id="view-assistant" class="view-section">
+      <div class="section-header">
+        <h1>AI Farming Assistant</h1>
+        <p class="subtitle">Get instant answers regarding crop diseases, pest controls, and field care.</p>
+      </div>
+
+      <div class="assistant-layout">
+        <!-- Quick Help Card -->
+        <div class="assistant-help-panel card">
+          <h3>Farming Knowledge Base</h3>
+          <p class="help-desc">Our AI assistant is loaded with agronomic details and can guide you through crop care. Select a common query to begin:</p>
+          
+          <div class="quick-queries-list">
+            <button class="quick-query-btn" onclick="sendQuickQuery('Why are my tomato leaves curling upward?')">
+              <i class="fa-solid fa-circle-question"></i> Why are my tomato leaves curling?
+            </button>
+            <button class="quick-query-btn" onclick="sendQuickQuery('How can I treat Wheat Rust organically?')">
+              <i class="fa-solid fa-circle-question"></i> How to treat wheat rust organically?
+            </button>
+            <button class="quick-query-btn" onclick="sendQuickQuery('What are the symptoms of Potato Late Blight?')">
+              <i class="fa-solid fa-circle-question"></i> Symptoms of Potato Late Blight?
+            </button>
+            <button class="quick-query-btn" onclick="sendQuickQuery('How do I control whiteflies in my greenhouse?')">
+              <i class="fa-solid fa-circle-question"></i> Controlling greenhouse whiteflies?
+            </button>
+          </div>
+
+          <!-- Latest Scan Context Info -->
+          <div class="assistant-context-card hidden" id="assistant-context-card">
+            <div class="context-header"><i class="fa-solid fa-circle-info"></i> <h4>Active Scan Context</h4></div>
+            <div class="context-body">
+              <p>The AI will frame responses keeping your latest scan in mind:</p>
+              <div class="context-details">
+                <span class="context-badge" id="assistant-context-crop">Crop: Tomato</span>
+                <span class="context-badge" id="assistant-context-disease">Disease: Late Blight</span>
+                <span class="context-badge" id="assistant-context-severity">Severity: 42%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Console Card -->
+        <div class="assistant-chat-panel card">
+          <div class="chat-header">
+            <div class="bot-avatar"><i class="fa-solid fa-robot"></i></div>
+            <div>
+              <h4>CropDoctor Bot</h4>
+              <span class="status-online"><span class="pulse-dot"></span> Online</span>
+            </div>
+          </div>
+          
+          <div class="chat-messages-container" id="chat-messages-container">
+            <!-- Messages go here -->
+            <div class="chat-msg bot">
+              <div class="msg-bubble">
+                Hello! I am your CropDoctor AI assistant. How can I help you improve your crop health today? Feel free to ask about treatments, symptoms, or preventive guidelines.
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input-wrapper">
+            <form id="form-assistant-chat" onsubmit="handleAssistantSubmit(event)">
+              <input type="text" id="chat-input-text" placeholder="Type a message or ask a question about your crop..." autocomplete="off">
+              <button type="submit" class="btn btn-primary btn-chat-send"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. ADMIN DASHBOARD VIEW -->
+    <section id="view-admin" class="view-section">
+      <div class="section-header">
+        <h1>Admin Analytics Panel</h1>
+        <p class="subtitle">System-wide monitoring, user activities, and deep learning performance.</p>
+      </div>
+
+      <!-- Admin Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card admin-stat">
+          <div class="stat-icon icon-blue"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-info">
+            <h3 id="admin-total-users">0</h3>
+            <p>Total Registered Users</p>
+          </div>
+        </div>
+        <div class="stat-card admin-stat">
+          <div class="stat-icon icon-green"><i class="fa-solid fa-images"></i></div>
+          <div class="stat-info">
+            <h3 id="admin-total-scans">0</h3>
+            <p>Total Scans Performed</p>
+          </div>
+        </div>
+        <div class="stat-card admin-stat">
+          <div class="stat-icon icon-red"><i class="fa-solid fa-circle-exclamation"></i></div>
+          <div class="stat-info">
+            <h3 id="admin-common-disease">N/A</h3>
+            <p>Top Disease Target</p>
+          </div>
+        </div>
+        <div class="stat-card admin-stat">
+          <div class="stat-icon icon-yellow"><i class="fa-solid fa-calculator"></i></div>
+          <div class="stat-info">
+            <h3 id="admin-avg-confidence">0%</h3>
+            <p>Model Confidence Avg</p>
+          </div>
+        </div>
+        <div class="stat-card admin-stat">
+          <div class="stat-icon icon-orange"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="stat-info">
+            <h3 id="admin-avg-severity">0%</h3>
+            <p>Average Severity</p>
+          </div>
+        </div>
+        <div class="stat-card admin-stat">
+          <div class="stat-icon icon-purple"><i class="fa-solid fa-thumbs-up"></i></div>
+          <div class="stat-info">
+            <h3 id="admin-feedback-accuracy">N/A</h3>
+            <p>Feedback Accuracy</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Charts and Activity -->
+      <div class="admin-charts-layout">
+        <!-- Chart 1: Disease Distribution -->
+        <div class="chart-container card">
+          <h3>Disease Incidence Distribution</h3>
+          <div class="canvas-wrapper">
+            <canvas id="chart-disease-dist"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Monthly Scans -->
+        <div class="chart-container card">
+          <h3>Scan Frequencies (Monthly)</h3>
+          <div class="canvas-wrapper">
+            <canvas id="chart-monthly-scans"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Crop Distribution -->
+        <div class="chart-container card">
+          <h3>Crop Distribution Analysis</h3>
+          <div class="canvas-wrapper">
+            <canvas id="chart-crop-dist"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent Activity Table -->
+        <div class="recent-activity-panel card grid-span-2">
+          <h3>Recent User Activity Log</h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>User Email</th>
+                  <th>Crop</th>
+                  <th>Detected Issue</th>
+                  <th>Time / Date</th>
+                </tr>
+              </thead>
+              <tbody id="admin-activity-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer no-print">
+    <div class="footer-container">
+      <p>&copy; 2026 CropDoctor AI. Powered by YOLO11 Deep Learning.</p>
+    </div>
+  </footer>
+
+  <!-- Script logic -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
