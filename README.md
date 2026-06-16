@@ -1,4 +1,4 @@
-# CropDoctor Detection 🌾🩺 
+# Crop-Disease-Detector 🌾🩺 
 
 CropDoctor is a crop disease detection web application built with **Flask**, **OpenCV**, and **YOLOv11** object detection models. It helps farmers and researchers scan crops for diseases, get instant diagnostic results, and receive recommendations for treatment and prevention.
 
