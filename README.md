@@ -16,7 +16,7 @@ CropDoctor is a crop disease detection web application built with **Flask**, **O
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Kaushikghosh2004/CropDoctor-Detection.git
+git clone https://github.com/Kaushikghosh2004/Crop-Disease-Detection.git
 cd CropDoctor-Detection/CropDoctor
 ```
 
